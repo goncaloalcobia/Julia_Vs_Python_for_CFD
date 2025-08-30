@@ -129,6 +129,17 @@ Outputs:
 
 ## Results
 
+
+### Profiles
+Examples (N=1024):
+- ![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
+- ![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
+
+**Observation:**  
+Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
+The differences in performance do not affect numerical results.
+
+
 ### Runtime (s)
 ![Runtime](figs/bench_st_time.png)
 
@@ -155,18 +166,6 @@ Outputs:
 **Observation:**  
 - Julia is consistently ~3× faster at small grids, increasing up to ~3.8× at \(N=1024\).  
 - The widening gap suggests Julia scales more robustly with problem size under single-threaded execution.
-
-
----
-
-### Profiles
-Examples (N=1024):
-- ![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
-- ![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
-
-**Observation:**  
-Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
-The differences in performance do not affect numerical results.
 
 ---
 
