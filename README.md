@@ -8,8 +8,8 @@ To compare **performance** and **numerical equivalence** between:
 - **Python + NumPy** (without Numba), and
 - **Julia**
 
-solving the classical **2D lid-driven cavity** problem in incompressible laminar flow.  
-Both implementations were kept **as equivalent as possible** in mathematics, discretization, and boundary conditions.
+solving the classical 2D lid-driven cavity problem in incompressible laminar flow.  
+Both implementations were kept as equivalent as possible in mathematics, discretization, and boundary conditions.
 
 ---
 
@@ -47,13 +47,13 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 ## Numerical discretization
 
 - Uniform Cartesian mesh N×N over [0,1]², dx=dy=1/(N-1).
-- **Spatial derivatives**: 2nd-order central differences.
-- **Time stepping (ω):**
+- Spatial derivatives: 2nd-order central differences.
+- Time stepping (ω):
   - Explicit Euler.
-  - **Adaptive timestep by CFL** with safety factor (CFL=0.3–0.4).
+  - Adaptive timestep by CFL with safety factor (CFL=0.3–0.4).
 
 - **Poisson ∇²ψ=-ω:**
-  - **Jacobi iteration** with fixed iterations per timestep (`jiters=80`).  
+  - Jacobi iteration with fixed iterations per timestep (`jiters=80`).  
   - Simple but fair between languages.
 
 ### Boundary Conditions
@@ -80,10 +80,10 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 ## Implementation
 
 - Both codes (Julia and Python) follow the same structure.  
-- **Vectorization**:  
+- Vectorization:  
   - Julia: broadcasting + views.  
   - Python: NumPy slicing (no Numba).  
-- Both use **float64** and identical CFL and Jacobi settings.
+- Both use float64 and identical CFL and Jacobi settings.
 
 ---
 
@@ -91,7 +91,7 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 
 1. Identical discretization and math.  
 2. Double precision in both codes.  
-3. Forced **single-thread mode**:  
+3. Forced single-thread mode:  
    ```bash
    export JULIA_NUM_THREADS=1
    export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1
@@ -166,26 +166,26 @@ Examples (N=1024):
 
 **Observation:**  
 Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
-The differences in performance do **not** affect numerical results.
+The differences in performance do not affect numerical results.
 
 ---
 
 ## Hardware used
 
-Tests were run on a **MacBook Air M4 (2024)** with the following specs:  
-- **CPU**: Apple M4 (3 nm, 8-core: 4 performance + 4 efficiency, up to 3.7 GHz)  
-- **Memory**: 16 GB unified  
-- **OS**: macOS Sequoia  
-- Both Julia and NumPy forced to run in **single-thread mode** for fairness.
+Tests were run on a MacBook Air M4 (2024) with the following specs:  
+- CPU: Apple M4 (3 nm, 8-core: 4 performance + 4 efficiency, up to 3.7 GHz)  
+- Memory: 16 GB unified  
+- OS: macOS Sequoia  
+- Both Julia and NumPy forced to run in single-thread mode for fairness.
 
 ---
 
 ## Observations
 
-- **Julia outperforms NumPy** in this CFD benchmark, with speedups of ~3–4× in single-thread mode.  
-- The **performance advantage increases with grid size**, highlighting Julia’s efficiency for larger simulations.  
-- Despite performance differences, both codes yield **physically identical results**, validating the fairness of the comparison.  
-- The main bottleneck remains the **Jacobi Poisson solver** — a simple but slow method. Using SOR or multigrid would shift the comparison to a more realistic HPC context.  
+- Julia outperforms NumPy in this CFD benchmark, with speedups of ~3–4× in single-thread mode.  
+- The performance advantage increases with grid size, highlighting Julia’s efficiency for larger simulations.  
+- Despite performance differences, both codes yield physically identical results, validating the fairness of the comparison.  
+- The main bottleneck remains the Jacobi Poisson solver — a simple but slow method. Using SOR or multigrid would shift the comparison to a more realistic HPC context.  
 
 ---
 
