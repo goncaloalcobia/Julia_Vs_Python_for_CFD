@@ -8,7 +8,7 @@ To compare **performance** and **numerical equivalence** between:
 - **Python + NumPy** (without Numba), and
 - **Julia**
 
-…solving the classical **2D lid-driven cavity** problem in incompressible laminar flow.  
+solving the classical **2D lid-driven cavity** problem in incompressible laminar flow.  
 Both implementations were kept **as equivalent as possible** in mathematics, discretization, and boundary conditions.
 
 ---
