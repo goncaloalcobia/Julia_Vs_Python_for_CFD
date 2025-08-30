@@ -26,23 +26,38 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 
 ## Governing equations (streamfunction–vorticity)
 
-**2D incompressible Navier–Stokes**, recast to avoid explicit pressure:
+2D incompressible Navier–Stokes, recast to avoid explicit pressure:
 
-- Streamfunction ψ ensures continuity:  
-  u = ∂ψ/∂y,   v = -∂ψ/∂x
+- Streamfunction \( \psi \) ensures continuity:
+  \[
+  u = \frac{\partial \psi}{\partial y}, 
+  \quad 
+  v = -\frac{\partial \psi}{\partial x}
+  \]
 
-- Vorticity ω:  
-  ω = ∂v/∂x - ∂u/∂y
+- Vorticity \( \omega \):
+  \[
+  \omega = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y}
+  \]
 
 **System solved:**
 
-1. Vorticity transport-diffusion:  
-   ∂ω/∂t + u ∂ω/∂x + v ∂ω/∂y = ν (∂²ω/∂x² + ∂²ω/∂y²)
+1. Vorticity transport–diffusion:
+   \[
+   \frac{\partial \omega}{\partial t} 
+   + u \frac{\partial \omega}{\partial x} 
+   + v \frac{\partial \omega}{\partial y}
+   = \nu \left( 
+   \frac{\partial^2 \omega}{\partial x^2} 
+   + \frac{\partial^2 \omega}{\partial y^2} 
+   \right)
+   \]
 
-2. Poisson for streamfunction:  
-   ∇²ψ = -ω
+2. Poisson for streamfunction:
+   \[
+   \nabla^2 \psi = - \omega
+   \]
 
-This is **not potential flow** — vorticity is non-zero and recirculations form inside the cavity.
 
 ---
 
@@ -163,9 +178,9 @@ Outputs:
 ---
 
 ### Profiles
-Examples (N=256):
-- ![u(y) centerline](figs/profiles_st_u_profile_N256.png)  
-- ![v(x) centerline](figs/profiles_st_v_profile_N256.png)
+Examples (N=1024):
+![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
+![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
 
 **Observation:**  
 Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
