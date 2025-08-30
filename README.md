@@ -28,25 +28,22 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 
 2D incompressible Navier–Stokes, recast to avoid explicit pressure:
 
-- **Streamfunction** $ \psi $ ensures continuity:  
-
-  $$
+- Streamfunction \( \psi \) ensures continuity:
+  \[
   u = \frac{\partial \psi}{\partial y}, 
-  \qquad 
+  \quad 
   v = -\frac{\partial \psi}{\partial x}
-  $$
+  \]
 
-- **Vorticity** $ \omega $:  
-
-  $$
+- Vorticity \( \omega \):
+  \[
   \omega = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y}
-  $$
+  \]
 
 **System solved:**
 
-1. Vorticity transport–diffusion:  
-
-   $$
+1. Vorticity transport–diffusion:
+   \[
    \frac{\partial \omega}{\partial t} 
    + u \frac{\partial \omega}{\partial x} 
    + v \frac{\partial \omega}{\partial y}
@@ -54,15 +51,12 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
    \frac{\partial^2 \omega}{\partial x^2} 
    + \frac{\partial^2 \omega}{\partial y^2} 
    \right)
-   $$
+   \]
 
-2. Poisson for streamfunction:  
-
-   $$
-   \nabla^2 \psi = -\omega
-   $$
-
-
+2. Poisson for streamfunction:
+   \[
+   \nabla^2 \psi = - \omega
+   \]
 
 
 ---
@@ -184,9 +178,9 @@ Outputs:
 ---
 
 ### Profiles
-Examples (N=1024):
-![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
-![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
+Examples (N=256):
+![u(y) centerline](figs/profiles_st_u_profile_N256.png)  
+![v(x) centerline](figs/profiles_st_v_profile_N256.png)
 
 **Observation:**  
 Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
