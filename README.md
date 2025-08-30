@@ -1,6 +1,6 @@
 # CFD Mini-Study — Python (NumPy) vs Julia on the 2D Lid-Driven Cavity
 
-![Thumbnail](thumbnail.png)
+![thumbnail](./thumbnail.png)
 
 
 ---
