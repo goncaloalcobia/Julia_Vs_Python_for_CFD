@@ -4,12 +4,13 @@
 
 import argparse, os, time, csv
 import numpy as np
+from pathlib import Path
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--N", type=int, default=256)
 ap.add_argument("--Re", type=float, default=100.0)
 ap.add_argument("--CFL", type=float, default=0.3)
-ap.add_argument("--tol", type=float, default=1e-6)
+ap.add_argument("--tol", type=float, default=1e-4)
 ap.add_argument("--jiters", type=int, default=80)   # iterações de Jacobi por passo
 ap.add_argument("--maxiter", type=int, default=20000)
 args = ap.parse_args()
@@ -108,9 +109,9 @@ for it in range(1, maxiter+1):
     dt_acc += dt
 
     if it % 200 == 0:
-        print(f"Iter {it}, dt={dt:.2e}, res={res:.2e}")
+        print(f"Iter {it}, dt={dt:.2e}, res={res:.2e}", flush=True)
     if res < tol:
-        print(f"Convergiu em {it} passos")
+        print(f"Convergiu em {it} passos", flush=True)
         break
 
 elapsed = time.perf_counter() - t0
@@ -121,12 +122,16 @@ avg_dt = dt_acc/max(steps,1)
 print(f"N={N} Re={Re:.1f} steps={steps} time={elapsed:.3f}s MLUPS(vort)={mlups_vort:.2f} "
       f"avg_dt={avg_dt:.2e} res={res:.2e}")
 
-# perfis centrais (nomes iguais aos da Julia/Python Numba para o run.py usar)
-y = np.linspace(0.0, 1.0, N); x = y
-np.savetxt(f"u_center_python_N{N}.dat", np.c_[y, u[N//2,:]])
-np.savetxt(f"v_center_python_N{N}.dat", np.c_[x, v[:,N//2]])
+# criar pasta "data" se não existir
+data_dir = Path("data")
+data_dir.mkdir(exist_ok=True)
 
-# resumo CSV (append) — usa summary_python.csv para uniformizar
+# perfis centrais → guardados em "data/"
+y = np.linspace(0.0, 1.0, N); x = y
+np.savetxt(data_dir/f"u_center_python_N{N}.dat", np.c_[y, u[N//2,:]])
+np.savetxt(data_dir/f"v_center_python_N{N}.dat", np.c_[x, v[:,N//2]])
+
+# resumo CSV (append) → continua na raiz
 sumfile = "summary_python.csv"
 newfile = not os.path.exists(sumfile)
 with open(sumfile, "a", newline="") as f:

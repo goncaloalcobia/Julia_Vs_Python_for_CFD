@@ -80,7 +80,7 @@ function main()
         set_psi_bcs!(ψ); update_uv_from_psi!(u,v,ψ); update_wall_vorticity!(ω,ψ)
         step_vorticity!(ωnew, ω, u, v, 1e-6); ψ = jacobi_psi!(ψ, ω, 1)
 
-        for it in 1:20_000
+        for it in 1:maxiter
             set_psi_bcs!(ψ)
             update_uv_from_psi!(u, v, ψ)
             update_wall_vorticity!(ω, ψ)
@@ -104,9 +104,11 @@ function main()
             steps += 1; dt_acc += dt
             if it % 200 == 0
                 @printf("Iter %d, dt=%.2e, res=%.2e\n", it, dt, res)
+                flush(stdout)
             end
             if res < tol
                 @printf("Convergiu em %d passos\n", it)
+                flush(stdout)
                 break
             end
         end
@@ -120,17 +122,22 @@ function main()
                 N, Re, steps, elapsed, mlups_vort, avg_dt, res)
 
         # ----------- saídas -----------
-        open("u_center_julia_N$(N).dat","w") do f
+        # criar pasta "data" se não existir
+        data_dir = joinpath(pwd(), "data")
+        isdir(data_dir) || mkpath(data_dir)
+
+        open(joinpath(data_dir, "u_center_julia_N$(N).dat"), "w") do f
             for j in 1:N
                 @printf(f, "%f %f\n", (j-1)*dy, u[cld(N,2), j])
             end
         end
-        open("v_center_julia_N$(N).dat","w") do f
+        open(joinpath(data_dir, "v_center_julia_N$(N).dat"), "w") do f
             for i in 1:N
                 @printf(f, "%f %f\n", (i-1)*dx, v[i, cld(N,2)])
             end
         end
 
+        # CSV de performance continua na raiz
         sumfile = "summary_julia.csv"
         newfile = !isfile(sumfile)
         open(sumfile, "a") do f

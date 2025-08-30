@@ -116,7 +116,7 @@ python cavity.py --N 256 --Re 100 --CFL 0.3 --tol 1e-6 --jiters 80
 
 ### Orchestrator (runs both + plots)
 ```bash
-python run.py --Ns 128 256 384 --Re 100 --CFL 0.3 --tol 1e-6 --jiters 80 --label st
+python run.py --Ns 128 256 384 512 1024 --Re 100 --CFL 0.3 --tol 1e-6 --jiters 80 --label st
 ```
 
 Outputs:
