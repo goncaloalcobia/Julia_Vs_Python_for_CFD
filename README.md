@@ -26,38 +26,21 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 
 ## Governing equations (streamfunction–vorticity)
 
-2D incompressible Navier–Stokes, recast to avoid explicit pressure:
+**2D incompressible Navier–Stokes**, recast to avoid explicit pressure:
 
-- Streamfunction \( \psi \) ensures continuity:
-  \[
-  u = \frac{\partial \psi}{\partial y}, 
-  \quad 
-  v = -\frac{\partial \psi}{\partial x}
-  \]
+- Streamfunction ψ ensures continuity:  
+  u = ∂ψ/∂y,   v = -∂ψ/∂x
 
-- Vorticity \( \omega \):
-  \[
-  \omega = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y}
-  \]
+- Vorticity ω:  
+  ω = ∂v/∂x - ∂u/∂y
 
 **System solved:**
 
-1. Vorticity transport–diffusion:
-   \[
-   \frac{\partial \omega}{\partial t} 
-   + u \frac{\partial \omega}{\partial x} 
-   + v \frac{\partial \omega}{\partial y}
-   = \nu \left( 
-   \frac{\partial^2 \omega}{\partial x^2} 
-   + \frac{\partial^2 \omega}{\partial y^2} 
-   \right)
-   \]
+1. Vorticity transport-diffusion:  
+   ∂ω/∂t + u ∂ω/∂x + v ∂ω/∂y = ν (∂²ω/∂x² + ∂²ω/∂y²)
 
-2. Poisson for streamfunction:
-   \[
-   \nabla^2 \psi = - \omega
-   \]
-
+2. Poisson for streamfunction:  
+   ∇²ψ = -ω
 
 ---
 
@@ -150,7 +133,6 @@ Outputs:
 ![Runtime](figs/bench_st_time.png)
 
 **Observation:**  
-- Time to solution scales superlinearly with grid size, as expected since the Jacobi solver dominates the cost (\(O(N^2 \times N_{\text{steps}})\)).  
 - Julia consistently runs faster than NumPy by a factor of ~3–4×.  
 - At \(N=1024\), Julia finishes in ~1700 s, while NumPy takes over 6300 s.
 
@@ -178,9 +160,9 @@ Outputs:
 ---
 
 ### Profiles
-Examples (N=256):
-![u(y) centerline](figs/profiles_st_u_profile_N256.png)  
-![v(x) centerline](figs/profiles_st_v_profile_N256.png)
+Examples (N=1024):
+- ![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
+- ![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
 
 **Observation:**  
 Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
