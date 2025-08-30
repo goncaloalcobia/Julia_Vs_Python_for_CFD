@@ -132,8 +132,8 @@ Outputs:
 
 ### Profiles
 Examples (N=1024):
-- ![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
-- ![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
+![u(y) centerline](figs/profiles_st_u_profile_N1024.png)  
+![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
 
 **Observation:**  
 The differences in performance do not affect numerical results → physical equivalence confirmed.  
