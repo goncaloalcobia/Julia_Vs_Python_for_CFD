@@ -136,8 +136,7 @@ Examples (N=1024):
 - ![v(x) centerline](figs/profiles_st_v_profile_N1024.png)
 
 **Observation:**  
-Velocity profiles from Julia and Python overlap almost perfectly → physical equivalence confirmed.  
-The differences in performance do not affect numerical results.
+The differences in performance do not affect numerical results → physical equivalence confirmed.  
 
 
 ### Runtime (s)
