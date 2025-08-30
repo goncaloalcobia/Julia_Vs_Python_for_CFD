@@ -144,7 +144,7 @@ The differences in performance do not affect numerical results → physical equi
 
 **Observation:**  
 - Julia consistently runs faster than NumPy by a factor of ~3–4×.  
-- At \(N=1024\), Julia finishes in ~1700 s, while NumPy takes over 6300 s.
+- At N=1024, Julia finishes in ~1700 s, while NumPy takes over 6300 s.
 
 ---
 
@@ -152,7 +152,7 @@ The differences in performance do not affect numerical results → physical equi
 ![MLUPS](figs/bench_st_mlups.png)
 
 **Observation:**  
-- Julia sustains ~12–14 MLUPS across resolutions, showing stable efficiency as the grid grows.  
+- Julia sustains ~12–14 MLUPS across resolutions.  
 - NumPy reaches at most ~5 MLUPS at moderate sizes, but drops below 4 MLUPS for \(N=512–1024\).  
 - This indicates that Julia maintains higher arithmetic intensity and better cache efficiency compared to Python/NumPy.
 
@@ -193,6 +193,3 @@ Tests were run on a MacBook Air M4 (2024) with the following specs:
 - Only Re=100 tested; turbulence would require higher-order time integration and finer grids.  
 - Multi-threaded or GPU versions could further highlight performance differences.  
 
----
-
-*End*
