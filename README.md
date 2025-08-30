@@ -28,35 +28,34 @@ Both implementations were kept **as equivalent as possible** in mathematics, dis
 
 2D incompressible Navier–Stokes, recast to avoid explicit pressure:
 
-- Streamfunction \( \psi \) ensures continuity:
+- Streamfunction \( \psi \) ensures continuity:  
   \[
   u = \frac{\partial \psi}{\partial y}, 
   \quad 
   v = -\frac{\partial \psi}{\partial x}
   \]
 
-- Vorticity \( \omega \):
+- Vorticity \( \omega \):  
   \[
   \omega = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y}
   \]
 
-**System solved:**
+System solved:
 
-1. Vorticity transport–diffusion:
+1. Vorticity transport–diffusion:  
    \[
    \frac{\partial \omega}{\partial t} 
    + u \frac{\partial \omega}{\partial x} 
    + v \frac{\partial \omega}{\partial y}
-   = \nu \left( 
-   \frac{\partial^2 \omega}{\partial x^2} 
-   + \frac{\partial^2 \omega}{\partial y^2} 
-   \right)
+   = \nu \left( \frac{\partial^2 \omega}{\partial x^2} 
+   + \frac{\partial^2 \omega}{\partial y^2} \right)
    \]
 
-2. Poisson for streamfunction:
+2. Poisson for streamfunction:  
    \[
-   \nabla^2 \psi = - \omega
+   \nabla^2 \psi = -\omega
    \]
+
 
 
 ---
