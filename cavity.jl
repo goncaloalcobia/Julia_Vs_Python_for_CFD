@@ -1,4 +1,4 @@
-# Lid-driven cavity 2D — vorticidade–função-corrente (Re=100), versão VETORIZADA
+# Lid-driven cavity 2D — vorticidade–funcao-corrente (Re=100), versao VETORIZADA
 # Uso: julia -O3 --check-bounds=no cavity.jl [N] [Re] [CFL] [tol] [JACOBI_ITERS]
 # Ex.:  julia -O3 --check-bounds=no cavity.jl 256 100 0.3 1e-6 80
 
@@ -14,92 +14,92 @@ function main()
 
     L  = 1.0
     dx = L/(N-1);  dy = dx
-    ν  = 1.0/Re
+    nu = 1.0/Re
     Utop = 1.0
     maxiter = 20_000
 
     # --------------- campos ---------------
-    ω    = zeros(N, N)
-    ψ    = zeros(N, N)
-    u    = zeros(N, N)
-    v    = zeros(N, N)
-    ωnew = similar(ω)
-    ψnew = similar(ψ)   # buffer para Jacobi vetorizado
+    omega    = zeros(N, N)
+    psi      = zeros(N, N)
+    u        = zeros(N, N)
+    v        = zeros(N, N)
+    omeganew = similar(omega)
+    psinew   = similar(psi)   # buffer para Jacobi vetorizado
 
     @views begin
         # ---------- helpers ----------
-        set_psi_bcs!(ψ) = (ψ[:,1] .= 0.0; ψ[:,end] .= 0.0; ψ[1,:] .= 0.0; ψ[end,:] .= 0.0)
+        set_psi_bcs!(psi) = (psi[:,1] .= 0.0; psi[:,end] .= 0.0; psi[1,:] .= 0.0; psi[end,:] .= 0.0)
 
-        function update_uv_from_psi!(u, v, ψ)
-            u[2:end-1,2:end-1] .= (ψ[2:end-1,3:end] .- ψ[2:end-1,1:end-2]) ./ (2dy)
-            v[2:end-1,2:end-1] .= -(ψ[3:end,2:end-1] .- ψ[1:end-2,2:end-1]) ./ (2dx)
+        function update_uv_from_psi!(u, v, psi)
+            u[2:end-1,2:end-1] .= (psi[2:end-1,3:end] .- psi[2:end-1,1:end-2]) ./ (2dy)
+            v[2:end-1,2:end-1] .= -(psi[3:end,2:end-1] .- psi[1:end-2,2:end-1]) ./ (2dx)
             # paredes (no-slip; tampa U=1)
-            u[:,1]  .= 0.0;  v[:,1]  .= 0.0
-            u[:,end].= Utop; v[:,end].= 0.0
-            u[1,:]  .= 0.0;  v[1,:]  .= 0.0
-            u[end,:].= 0.0;  v[end,:].= 0.0
+            u[:,1]   .= 0.0;  v[:,1]   .= 0.0
+            u[:,end] .= Utop; v[:,end] .= 0.0
+            u[1,:]   .= 0.0;  v[1,:]   .= 0.0
+            u[end,:] .= 0.0;  v[end,:] .= 0.0
         end
 
-        function update_wall_vorticity!(ω, ψ)
-            ω[:,1]   .= -2 .* ψ[:,2]       ./ (dy^2)                 # bottom
-            ω[:,end] .= -2 .* ψ[:,end-1]   ./ (dy^2) .- 2Utop/dy     # top (U=1)
-            ω[1,:]   .= -2 .* ψ[2,:]       ./ (dx^2)                 # left
-            ω[end,:] .= -2 .* ψ[end-1,:]   ./ (dx^2)                 # right
+        function update_wall_vorticity!(omega, psi)
+            omega[:,1]   .= -2 .* psi[:,2]       ./ (dy^2)               # bottom
+            omega[:,end] .= -2 .* psi[:,end-1]   ./ (dy^2) .- 2Utop/dy   # top (U=1)
+            omega[1,:]   .= -2 .* psi[2,:]       ./ (dx^2)               # left
+            omega[end,:] .= -2 .* psi[end-1,:]   ./ (dx^2)               # right
         end
 
-        # ω-step (vetorizado)
-        function step_vorticity!(ωnew, ω, u, v, dt)
-            adv = u[2:end-1,2:end-1] .* (ω[3:end,2:end-1] .- ω[1:end-2,2:end-1]) ./ (2dx) .+
-                  v[2:end-1,2:end-1] .* (ω[2:end-1,3:end] .- ω[2:end-1,1:end-2]) ./ (2dy)
-            lap = (ω[3:end,2:end-1] .- 2 .* ω[2:end-1,2:end-1] .+ ω[1:end-2,2:end-1]) ./ (dx^2) .+
-                  (ω[2:end-1,3:end] .- 2 .* ω[2:end-1,2:end-1] .+ ω[2:end-1,1:end-2]) ./ (dy^2)
-            ωnew .= ω
-            ωnew[2:end-1,2:end-1] .+= dt .* (-adv .+ ν .* lap)
+        # omega-step (vetorizado)
+        function step_vorticity!(omeganew, omega, u, v, dt)
+            adv = u[2:end-1,2:end-1] .* (omega[3:end,2:end-1] .- omega[1:end-2,2:end-1]) ./ (2dx) .+
+                  v[2:end-1,2:end-1] .* (omega[2:end-1,3:end] .- omega[2:end-1,1:end-2]) ./ (2dy)
+            lap = (omega[3:end,2:end-1] .- 2 .* omega[2:end-1,2:end-1] .+ omega[1:end-2,2:end-1]) ./ (dx^2) .+
+                  (omega[2:end-1,3:end] .- 2 .* omega[2:end-1,2:end-1] .+ omega[2:end-1,1:end-2]) ./ (dy^2)
+            omeganew .= omega
+            omeganew[2:end-1,2:end-1] .+= dt .* (-adv .+ nu .* lap)
         end
 
         # Poisson Jacobi (vetorizado com buffer)
-        function jacobi_psi!(ψ, ω, iters)
-            dx2 = dx^2; dy2 = dy^2; β = 1/(2*(dx2+dy2))
+        function jacobi_psi!(psi, omega, iters)
+            dx2 = dx^2; dy2 = dy^2; beta = 1/(2*(dx2+dy2))
             for _ in 1:iters
-                set_psi_bcs!(ψ)
-                ψnew[2:end-1,2:end-1] .= β .* (
-                    (ψ[3:end,2:end-1] .+ ψ[1:end-2,2:end-1]) .* dy2 .+
-                    (ψ[2:end-1,3:end] .+ ψ[2:end-1,1:end-2]) .* dx2 .+
-                    (dx2*dy2) .* ω[2:end-1,2:end-1]
+                set_psi_bcs!(psi)
+                psinew[2:end-1,2:end-1] .= beta .* (
+                    (psi[3:end,2:end-1] .+ psi[1:end-2,2:end-1]) .* dy2 .+
+                    (psi[2:end-1,3:end] .+ psi[2:end-1,1:end-2]) .* dx2 .+
+                    (dx2*dy2) .* omega[2:end-1,2:end-1]
                 )
                 # manter fronteiras a zero no buffer
-                ψnew[:,1] .= 0.0; ψnew[:,end] .= 0.0; ψnew[1,:] .= 0.0; ψnew[end,:] .= 0.0
-                ψ, ψnew = ψnew, ψ   # swap
+                psinew[:,1] .= 0.0; psinew[:,end] .= 0.0; psinew[1,:] .= 0.0; psinew[end,:] .= 0.0
+                psi, psinew = psinew, psi   # swap
             end
-            return ψ
+            return psi
         end
 
         # ------------- loop temporal -------------
         t0 = time(); steps = 0; dt_acc = 0.0; res = Inf
         # warm-up leve
-        set_psi_bcs!(ψ); update_uv_from_psi!(u,v,ψ); update_wall_vorticity!(ω,ψ)
-        step_vorticity!(ωnew, ω, u, v, 1e-6); ψ = jacobi_psi!(ψ, ω, 1)
+        set_psi_bcs!(psi); update_uv_from_psi!(u,v,psi); update_wall_vorticity!(omega,psi)
+        step_vorticity!(omeganew, omega, u, v, 1e-6); psi = jacobi_psi!(psi, omega, 1)
 
         for it in 1:maxiter
-            set_psi_bcs!(ψ)
-            update_uv_from_psi!(u, v, ψ)
-            update_wall_vorticity!(ω, ψ)
+            set_psi_bcs!(psi)
+            update_uv_from_psi!(u, v, psi)
+            update_wall_vorticity!(omega, psi)
 
             umax = max(maximum(abs.(u)), 1e-12)
             vmax = max(maximum(abs.(v)), 1e-12)
             dtc1 = dx/umax; dtc2 = dy/vmax
-            dtd1 = dx^2/(4ν); dtd2 = dy^2/(4ν)
+            dtd1 = dx^2/(4nu); dtd2 = dy^2/(4nu)
             dt = CFL * min(dtc1, dtc2, dtd1, dtd2)
 
-            step_vorticity!(ωnew, ω, u, v, dt)
+            step_vorticity!(omeganew, omega, u, v, dt)
 
-            # alinhar bordas antes do res (para não contaminar)
-            ωnew[1,:] .= ω[1,:]; ωnew[end,:] .= ω[end,:]
-            ωnew[:,1] .= ω[:,1]; ωnew[:,end] .= ω[:,end]
-            res = maximum(abs.(ωnew .- ω))
+            # alinhar bordas antes do res (para nao contaminar)
+            omeganew[1,:] .= omega[1,:];   omeganew[end,:] .= omega[end,:]
+            omeganew[:,1] .= omega[:,1];   omeganew[:,end] .= omega[:,end]
+            res = maximum(abs.(omeganew .- omega))
 
-            ω .= ωnew
-            ψ = jacobi_psi!(ψ, ω, JIT)
+            omega .= omeganew
+            psi = jacobi_psi!(psi, omega, JIT)
 
             steps += 1; dt_acc += dt
             if it % 200 == 0
@@ -121,8 +121,7 @@ function main()
         @printf("N=%d Re=%.1f steps=%d time=%.3fs MLUPS(vort)=%.2f avg_dt=%.2e res=%.2e\n",
                 N, Re, steps, elapsed, mlups_vort, avg_dt, res)
 
-        # ----------- saídas -----------
-        # criar pasta "data" se não existir
+        # ----------- saidas -----------
         data_dir = joinpath(pwd(), "data")
         isdir(data_dir) || mkpath(data_dir)
 
